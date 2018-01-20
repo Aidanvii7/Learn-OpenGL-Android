@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.aidanvii.utils.opengl.v20.OpenGLES2ViewModel" />
+    </data>
+
+    <android.opengl.GLSurfaceView
+        android:id="@+id/gl_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:renderer="@{viewModel.renderer}"
+        tools:context="com.aidanvii.firstopenglproject.FirstOpenGLActivity" />
+</layout>
