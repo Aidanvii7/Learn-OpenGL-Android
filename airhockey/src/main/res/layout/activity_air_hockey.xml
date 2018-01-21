@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -10,10 +11,11 @@
             type="com.aidanvii.utils.opengles.v20.OpenGLES2ViewModel" />
     </data>
 
-    <com.aidanvii.utils.opengles.GLSurfaceViewWrapper
+    <com.aidanvii.utils.opengles.GLViewWrapper
         android:id="@+id/gl_surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:renderer="@{viewModel.renderer}"
+        app:useTextureView="true"
         tools:context="com.aidanvii.airhockey.AirHockeyActivity" />
 </layout>
