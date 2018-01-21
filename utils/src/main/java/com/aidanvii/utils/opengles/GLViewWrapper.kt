@@ -3,6 +3,7 @@ package com.aidanvii.utils.opengles
 import android.arch.lifecycle.DefaultLifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
+import android.content.res.TypedArray
 import android.opengl.GLSurfaceView
 import android.opengl.GLTextureView
 import android.support.v4.app.FragmentActivity
@@ -23,12 +24,44 @@ class GLViewWrapper @JvmOverloads constructor(
 
     private val glViewWrapperDelegate: GLViewWrapperDelegate =
             context.obtainStyledAttributes(attrs, R.styleable.GLViewWrapper).get {
-                if (getBoolean(R.styleable.GLViewWrapper_useTextureView, false)) {
-                    createTextureViewDelegate(context)
-                } else {
-                    createSurfaceViewDelegate(context)
-                }
+                if (textureViewEnabled()) createTextureViewDelegate(context) else createSurfaceViewDelegate(context)
             }
+
+    private var _renderer: GLSurfaceView.Renderer = emptyRenderer()
+
+    var renderer: GLSurfaceView.Renderer?
+        get() = _renderer
+        set(value) {
+            _renderer = if (value != null) value else emptyRenderer()
+        }
+
+    init {
+        (context as? FragmentActivity)?.apply {
+            lifecycle.addObserver(object : DefaultLifecycleObserver {
+                override fun onStart(owner: LifecycleOwner) = onStart()
+                override fun onStop(owner: LifecycleOwner) = onStop()
+            })
+        }
+    }
+
+    fun onStart() {
+        glViewWrapperDelegate.onStart()
+    }
+
+    fun onStop() {
+        glViewWrapperDelegate.onStop()
+    }
+
+    private fun emptyRenderer(): GLSurfaceView.Renderer {
+        return object : GLSurfaceView.Renderer {
+            override fun onDrawFrame(gl: GL10?) {}
+            override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {}
+            override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {}
+        }
+    }
+
+    private fun TypedArray.textureViewEnabled() =
+            getBoolean(R.styleable.GLViewWrapper_useTextureView, false)
 
     private fun createTextureViewDelegate(context: Context): GLViewWrapperDelegate {
         return object : GLViewWrapperDelegate {
@@ -72,38 +105,6 @@ class GLViewWrapper @JvmOverloads constructor(
                 glSurfaceView.onPause()
             }
         }
-    }
-
-    private var _renderer: GLSurfaceView.Renderer = emptyRenderer()
-    var renderer: GLSurfaceView.Renderer?
-        get() = _renderer
-        set(value) {
-            _renderer = if (value != null) value else emptyRenderer()
-        }
-
-    init {
-        (context as? FragmentActivity)?.apply {
-            lifecycle.addObserver(object : DefaultLifecycleObserver {
-                override fun onStart(owner: LifecycleOwner) = onStart()
-                override fun onStop(owner: LifecycleOwner) = onStop()
-            })
-        }
-    }
-
-    private fun emptyRenderer(): GLSurfaceView.Renderer {
-        return object : GLSurfaceView.Renderer {
-            override fun onDrawFrame(gl: GL10?) {}
-            override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {}
-            override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {}
-        }
-    }
-
-    fun onStart() {
-        glViewWrapperDelegate.onStart()
-    }
-
-    fun onStop() {
-        glViewWrapperDelegate.onStop()
     }
 
     private inner class RendererForwarder : GLSurfaceView.Renderer {
