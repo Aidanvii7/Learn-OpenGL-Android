@@ -28,6 +28,12 @@ class GLViewWrapper @JvmOverloads constructor(
             }
 
     private var _renderer: GLSurfaceView.Renderer = emptyRenderer()
+        set(value) {
+            if (field !== value) {
+                field = value
+                glViewWrapperDelegate.setRenderer(value)
+            }
+        }
 
     var renderer: GLSurfaceView.Renderer?
         get() = _renderer

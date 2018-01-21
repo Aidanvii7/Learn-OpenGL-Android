@@ -16,6 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:renderer="@{viewModel.renderer}"
-        app:useTextureView="true"
+        app:useTextureView="false"
         tools:context="com.aidanvii.airhockey.AirHockeyActivity" />
 </layout>
