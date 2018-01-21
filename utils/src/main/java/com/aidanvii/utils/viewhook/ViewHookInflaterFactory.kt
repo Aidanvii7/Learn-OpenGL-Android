@@ -32,25 +32,6 @@ import java.lang.ref.WeakReference
  *  [ViewHook]'s that care about said [View] will receive a callback upon successful creation of the [View].
  *
  *  It essentially allows implementations of [ViewHook] to hook into the [View] at inflation time, and hook up custom behavior based on for example, custom xml attributes.
- *
- *  To use it, attach it to the activity like so:
- * <pre>
- * `
- *
- * protected void onCreate(Bundle savedInstanceState)
- * {
- * super.onCreate(savedInstanceState);
- * // attach after super
- * m_factory = ModularInflaterFactory.create(this);
- * // add a ViewHook
- * m_factory.addViewHook(new SizeAwareViewHook());
- * // now inflate the View hierarchy
- * setContentView(R.layout.activity_home_screen);
- * }
-` *
-</pre> *
- *
- * TODO open source?
  */
 class ViewHookInflaterFactory private constructor(
         compat_activity: AppCompatActivity,
@@ -149,7 +130,7 @@ class ViewHookInflaterFactory private constructor(
         /**
          * Called when the [ViewHookInflaterFactory] is trying to determine if it should create the [View].
          *
-         *  This will trigger [.viewCreated] to be called if the view could be successfully created.
+         *  This will trigger [viewCreated] to be called if the view could be successfully created.
          *
          * @param parent
          * @param name
@@ -157,12 +138,12 @@ class ViewHookInflaterFactory private constructor(
          * @param attrs
          * @return true to create the [View], false otherwise
          */
-        fun shouldCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet?) = false
+        fun shouldCreateView(parent: View?, name: String, context: Context, attrs: AttributeSet?) = true
 
         /**
          * Called when the [View] has been created.
          *
-         *  If needed, the [ViewHook] should pull out whatever it needs to from the parameters previously passed to [.shouldCreateView].
+         *  If needed, the [ViewHook] should pull out whatever it needs to from the parameters previously passed to [shouldCreateView].
          *
          * @param view   the newly instantiated view. This is never null.
          * @param parent the future parent view of the newly instantiated view (the view is not attached to the parent yet). Note this may be null.
