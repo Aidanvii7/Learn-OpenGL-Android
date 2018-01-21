@@ -1,4 +1,4 @@
-package com.aidanvii.utils.opengl
+package com.aidanvii.utils.opengles
 
 import android.app.Activity
 import android.arch.lifecycle.DefaultLifecycleObserver
@@ -11,11 +11,11 @@ import com.aidanvii.utils.activity.ActivityFinisher
 import com.aidanvii.utils.databinding.getTrackedValue
 import com.aidanvii.utils.databinding.setTrackedValue
 import com.aidanvii.utils.databinding.trackInstance
-import com.aidanvii.utils.opengl.v20.OpenGLES2SupportChecker
+import com.aidanvii.utils.opengles.v20.OpenGLES2SupportChecker
 
 
 @BindingAdapter("android:renderer")
-fun GLSurfaceView._bind(renderer: GLSurfaceView.Renderer?) {
+fun GLSurfaceViewWrapper._bind(renderer: GLSurfaceView.Renderer?) {
     trackInstance(
             instanceResId = R.id.gl_renderer,
             newInstance = renderer,
@@ -27,23 +27,23 @@ fun GLSurfaceView._bind(renderer: GLSurfaceView.Renderer?) {
     )
 }
 
-private fun GLSurfaceView.onRendererAttached(renderer: GLSurfaceView.Renderer) {
+private fun GLSurfaceViewWrapper.onRendererAttached(renderer: GLSurfaceView.Renderer) {
     if (!rendererSet) {
-        setRenderer(renderer)
+        this.renderer = renderer
         tryAttachLifecycleObserver()
         rendererSet = true
     } else throwRendererSetMoreThanOnce()
 }
 
-private var GLSurfaceView.rendererSet: Boolean
+private var GLSurfaceViewWrapper.rendererSet: Boolean
     get() = getTrackedValue(R.id.gl_has_renderer) ?: false
     set(value) = setTrackedValue(R.id.gl_has_renderer, value)
 
-private fun GLSurfaceView.tryAttachLifecycleObserver() {
+private fun GLSurfaceViewWrapper.tryAttachLifecycleObserver() {
     (context as? FragmentActivity)?.apply {
         lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onStart(owner: LifecycleOwner) = onResume()
-            override fun onStop(owner: LifecycleOwner) = onPause()
+            override fun onStart(owner: LifecycleOwner) = onStart()
+            override fun onStop(owner: LifecycleOwner) = onStop()
         })
     }
 }

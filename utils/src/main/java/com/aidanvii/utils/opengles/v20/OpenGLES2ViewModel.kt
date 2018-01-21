@@ -1,9 +1,5 @@
-package com.aidanvii.utils.opengl.v20
+package com.aidanvii.utils.opengles.v20
 
-import android.app.Activity
-import android.content.Context
-import android.opengl.GLSurfaceView
-import com.aidanvii.utils.activity.ActivityFinisher
 import com.aidanvii.utils.arch.ViewModelFactory
 import com.aidanvii.utils.databinding.ObservableViewModel
 

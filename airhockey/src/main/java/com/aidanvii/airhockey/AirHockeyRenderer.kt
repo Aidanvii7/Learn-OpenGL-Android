@@ -1,9 +1,9 @@
-package com.aidanvii.firstopenglproject
+package com.aidanvii.airhockey
 
-import com.aidanvii.utils.opengl.v20.OpenGLES2Renderer
+import com.aidanvii.utils.opengles.v20.OpenGLES2Renderer
 import javax.microedition.khronos.egl.EGLConfig
 
-class FirstOpenGLRenderer : OpenGLES2Renderer() {
+class AirHockeyRenderer : OpenGLES2Renderer() {
 
     override fun onSurfaceCreated(config: EGLConfig) {
         glClearColor(red = 1f, blue = 1f)

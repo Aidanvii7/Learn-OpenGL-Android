@@ -1,4 +1,4 @@
-package com.aidanvii.utils.opengl.v20
+package com.aidanvii.utils.opengles.v20
 
 import android.app.ActivityManager
 import android.content.Context

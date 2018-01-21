@@ -1,4 +1,4 @@
-package com.aidanvii.utils.opengl.v20
+package com.aidanvii.utils.opengles.v20
 
 import android.opengl.GLES20
 import android.opengl.GLES20.GL_COLOR_BUFFER_BIT

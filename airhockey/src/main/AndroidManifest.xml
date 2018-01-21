@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.aidanvii.firstopenglproject">
+    package="com.aidanvii.airhockey">
 
     <application
         android:allowBackup="true"
@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FirstOpenGLActivity">
+        <activity android:name="com.aidanvii.airhockey.AirHockeyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
