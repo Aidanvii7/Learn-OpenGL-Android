@@ -71,10 +71,6 @@ class GLViewWrapper @JvmOverloads constructor(
                 addView(glTextureView)
             }
 
-            override fun setRenderer(renderer: GLSurfaceView.Renderer) {
-                glTextureView.setRenderer(renderer)
-            }
-
             override fun onStart() {
                 glTextureView.onResume()
             }
@@ -91,10 +87,6 @@ class GLViewWrapper @JvmOverloads constructor(
             private val glSurfaceView = GLSurfaceView(context, null).also { glSurfaceView ->
                 glSurfaceView.setRenderer(rendererForwarder)
                 addView(glSurfaceView)
-            }
-
-            override fun setRenderer(renderer: GLSurfaceView.Renderer) {
-                glSurfaceView.setRenderer(renderer)
             }
 
             override fun onStart() {
@@ -122,7 +114,6 @@ class GLViewWrapper @JvmOverloads constructor(
     }
 
     private interface GLViewWrapperDelegate {
-        fun setRenderer(renderer: GLSurfaceView.Renderer)
         fun onStart()
         fun onStop()
     }
