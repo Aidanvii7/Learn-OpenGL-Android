@@ -19,7 +19,7 @@ open class ObservableViewModel : ViewModel(), NotifiableObservable by Notifiable
     object Factory {
 
         @RestrictTo(RestrictTo.Scope.TESTS)
-        fun <T : ObservableViewModel> tested(
+        inline fun <T : ObservableViewModel> tested(
                 brClass: Class<*>,
                 provideTested: Provider<T>
         ): T {
