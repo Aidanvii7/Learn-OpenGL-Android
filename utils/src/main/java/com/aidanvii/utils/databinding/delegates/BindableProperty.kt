@@ -20,7 +20,6 @@ import kotlin.reflect.KProperty
  */
 fun <T> NotifiableObservable.bindable(initialValue: T) = BindableProperty(initialValue, this)
 
-
 /**
  * A property provideOpenGLES20 for properties of [NotifiableObservable] objects.
  */
