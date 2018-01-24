@@ -10,29 +10,21 @@ import com.aidanvii.utils.leakingThis
  * A convenience view-model class that implements [NotifiableObservable].
  */
 @Suppress(leakingThis)
-open class ObservableViewModel : ViewModel(), NotifiableObservable by Factory.delegate() {
+open class ObservableViewModel : ViewModel(), NotifiableObservable by NotifiableObservable.delegate() {
 
     init {
         initDelegator(this)
     }
 
     object Factory {
-        private val defaultProvideDelegate: Provider<NotifiableObservable> = { NotifiableObservable.delegate() }
-        private var provideDelegate = defaultProvideDelegate
-
-        internal fun delegate(): NotifiableObservable = provideDelegate()
 
         @RestrictTo(RestrictTo.Scope.TESTS)
         fun <T : ObservableViewModel> tested(
-                mockDelegate: NotifiableObservable = delegate(),
                 brClass: Class<*>,
                 provideTested: Provider<T>
         ): T {
-            this.provideDelegate = { mockDelegate }
-            brClass.let { PropertyMapper.initBRClass(it, locked = false) }
-            return provideTested().also {
-                this.provideDelegate = defaultProvideDelegate
-            }
+            PropertyMapper.initBRClass(brClass, locked = false)
+            return provideTested()
         }
     }
 }
