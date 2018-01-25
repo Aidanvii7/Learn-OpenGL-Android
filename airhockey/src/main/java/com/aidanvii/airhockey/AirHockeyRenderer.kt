@@ -1,5 +1,6 @@
 package com.aidanvii.airhockey
 
+import com.aidanvii.utils.opengles.GLThread
 import com.aidanvii.utils.opengles.v20.OpenGLES2Renderer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
@@ -35,14 +36,17 @@ class AirHockeyRenderer : OpenGLES2Renderer() {
         put(tableVerticesWithTriangles)
     }
 
+    @GLThread
     override fun onSurfaceCreated(config: EGLConfig) {
         glClearColor(red = 1f, blue = 1f)
     }
 
+    @GLThread
     override fun onSurfaceChanged(width: Int, height: Int) {
         glViewport(width, height)
     }
 
+    @GLThread
     override fun onDrawFrame() {
         glClear()
     }
