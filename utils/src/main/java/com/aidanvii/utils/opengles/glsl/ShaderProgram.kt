@@ -5,12 +5,20 @@ import com.aidanvii.utils.logger.logV
 import com.aidanvii.utils.logger.logW
 import com.aidanvii.utils.opengles.v20.OpenGLES20
 import com.aidanvii.utils.opengles.GLThread
+import java.io.Closeable
 
 class ShaderProgram @GLThread constructor(
         val openGLES20: OpenGLES20,
         val vertexShader: VertexShader,
         val fragmentShader: FragmentShader
-) {
+) : Closeable {
+
+    @GLThread
+    override fun close() {
+        openGLES20.glDeleteProgram(programObjectId)
+        vertexShader.close()
+        fragmentShader.close()
+    }
 
     val programObjectId = linkProgram()
 
@@ -18,7 +26,7 @@ class ShaderProgram @GLThread constructor(
         glCreateProgram().let { programObjectId ->
             if (programObjectId == GL_ERROR_CODE) {
                 logW("Could not create GL program")
-                GL_ERROR_CODE
+                throw CreateShaderProgramError()
             } else {
                 glAttachShader(programObjectId, vertexShader.shaderObjectId)
                 glAttachShader(programObjectId, fragmentShader.shaderObjectId)
@@ -30,7 +38,7 @@ class ShaderProgram @GLThread constructor(
                 if (glLinkStatus[0] == GL_ERROR_CODE) {
                     glDeleteProgram(programObjectId)
                     logW("Linking of program failed.")
-                    throw ShaderProgramError(linkInfoLog)
+                    throw LinkShaderProgramError(linkInfoLog)
                 } else programObjectId
             }
         }
