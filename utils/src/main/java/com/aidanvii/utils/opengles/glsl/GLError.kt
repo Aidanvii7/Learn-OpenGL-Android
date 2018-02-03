@@ -12,3 +12,7 @@ class CompileShaderError(
 class CreateShaderProgramError : GLError("Could not create shader program")
 
 class LinkShaderProgramError(linkInfoLog: String) : GLError("Could not link shader program. Log: $linkInfoLog.")
+
+class GetAttributeLocationError(attributeName: String) : GLError("Could not get attribute location for: $attributeName.")
+
+class GetUniformLocationError(attributeName: String) : GLError("Could not get uniform location for: $attributeName.")

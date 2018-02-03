@@ -19,21 +19,21 @@ class AirHockeyRenderer(
 
     val tableVerticesWithTriangles = vertexBuilder2D(20) {
         triangle(
-                point1X = 0f, point1Y = 0f,
-                point2X = 9f, point2Y = 14f,
-                point3X = 0f, point3Y = 14f
+                point1X = -0.5f, point1Y = -0.5f,
+                point2X = 0.5f, point2Y = 0.5f,
+                point3X = -0.5f, point3Y = 0.5f
         )
         triangle(
-                point1X = 0f, point1Y = 0f,
-                point2X = 9f, point2Y = 0f,
-                point3X = 9f, point3Y = 14f
+                point1X = -0.5f, point1Y = -0.5f,
+                point2X = 0.5f, point2Y = -0.5f,
+                point3X = 0.5f, point3Y = 0.5f
         )
         line(
-                point1X = 0f, point1Y = 7f,
-                point2X = 9f, point2Y = 7f
+                point1X = -0.5f, point1Y = 0f,
+                point2X = 0.5f, point2Y = 0f
         )
-        point(pointX = 4.5f, pointY = 2f)
-        point(pointX = 4.5f, pointY = 12f)
+        point(pointX = 0f, pointY = -0.25f)
+        point(pointX = 0f, pointY = 0.25f)
     }.build()
 
     val vertexData = ByteBuffer
@@ -65,7 +65,6 @@ class AirHockeyRenderer(
     @GLThread
     override fun onSurfaceCreated(config: EGLConfig) {
         glClearColor(red = 0f, green = 0f, blue = 0f)
-
         glUseProgram(shaderProgram.programObjectId)
         vertexData.position(0)
         shaderProgram.vertexShader.attributeContainer.apply {
@@ -79,13 +78,27 @@ class AirHockeyRenderer(
                         ptr = vertexData
                 )
                 glEnableVertexAttribArray(aPosition)
+            }
+        }
+
+    }
+
+    @GLThread
+    override fun onSurfaceChanged(width: Int, height: Int) {
+        glViewport(width, height)
+    }
+
+    @GLThread
+    override fun onDrawFrame() {
+        glClear()
+        shaderProgram.vertexShader.attributeContainer.apply {
+            shaderProgram.fragmentShader.uniformContainer.apply {
                 drawTable()
                 drawDividingLine()
                 drawMallet1()
                 drawMallet2()
             }
         }
-
     }
 
     private fun AirHockeyUniformContainer.drawTable() {
@@ -106,16 +119,6 @@ class AirHockeyRenderer(
     private fun AirHockeyUniformContainer.drawMallet2() {
         glUniform4f(uColor, 1.0f, 0.0f, 0.0f, 1.0f)
         glDrawArrays(GL_POINTS, 9, 1)
-    }
-
-    @GLThread
-    override fun onSurfaceChanged(width: Int, height: Int) {
-        glViewport(width, height)
-    }
-
-    @GLThread
-    override fun onDrawFrame() {
-        glClear()
     }
 
     companion object {

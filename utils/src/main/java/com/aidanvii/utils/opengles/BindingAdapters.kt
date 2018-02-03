@@ -15,9 +15,7 @@ fun GLViewWrapper._bind(renderer: GLSurfaceView.Renderer?) {
             instanceResId = R.id.gl_renderer,
             newInstance = renderer,
             onAttached = {
-                if (!OpenGLES2SupportChecker.provide(context).supportsEs2) {
-                    ActivityFinisher(context as Activity).finishWithToast("This device does not support OpenGL ES 2.0")
-                } else this.renderer = it
+                this.renderer = it
             },
             onDetached = {
                 this.renderer = null

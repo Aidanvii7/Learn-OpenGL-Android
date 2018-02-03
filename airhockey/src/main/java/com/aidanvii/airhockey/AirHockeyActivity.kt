@@ -1,19 +1,15 @@
 package com.aidanvii.airhockey
 
-import android.content.Context
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.AttributeSet
-import android.view.View
 import com.aidanvii.airhockey.databinding.ActivityAirHockeyBinding
 import com.aidanvii.utils.arch.ViewModelFactory
 import com.aidanvii.utils.arch.addTypedFactory
 import com.aidanvii.utils.arch.get
 import com.aidanvii.utils.arch.viewModelProvider
 import com.aidanvii.utils.opengles.glsl.ShaderLoaderProvider
-import com.aidanvii.utils.opengles.v20.OpenGLES2ViewModel
-import com.aidanvii.utils.viewhook.ViewHookInflaterFactory
+import com.aidanvii.utils.opengles.v20.GLRendererViewModel
 
 
 class AirHockeyActivity : AppCompatActivity() {
@@ -24,7 +20,7 @@ class AirHockeyActivity : AppCompatActivity() {
         viewModelProvider(
                 factory = ViewModelFactory.Builder()
                         .addTypedFactory(
-                                OpenGLES2ViewModel.Factory(AirHockeyRenderer(ShaderLoaderProvider(this)))
+                                GLRendererViewModel.Factory(AirHockeyRenderer(ShaderLoaderProvider(this)))
                         ).build()
         )
     }

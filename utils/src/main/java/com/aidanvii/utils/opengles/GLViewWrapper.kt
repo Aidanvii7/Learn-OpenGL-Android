@@ -1,5 +1,6 @@
 package com.aidanvii.utils.opengles
 
+import android.app.Activity
 import android.arch.lifecycle.DefaultLifecycleObserver
 import android.arch.lifecycle.LifecycleOwner
 import android.content.Context
@@ -10,7 +11,9 @@ import android.support.v4.app.FragmentActivity
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import com.aidanvii.utils.R
+import com.aidanvii.utils.activity.ActivityFinisher
 import com.aidanvii.utils.get
+import com.aidanvii.utils.opengles.v20.OpenGLES2SupportChecker
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -24,7 +27,11 @@ class GLViewWrapper @JvmOverloads constructor(
 
     private val glViewWrapperDelegate: GLViewWrapperDelegate =
             context.obtainStyledAttributes(attrs, R.styleable.GLViewWrapper).get {
+                if (!OpenGLES2SupportChecker.provide(context).supportsEs2) {
+                    ActivityFinisher(context as Activity).finishWithToast("This device does not support OpenGL ES 2.0")
+                }
                 if (textureViewEnabled()) createTextureViewDelegate(context) else createSurfaceViewDelegate(context)
+
             }
 
     private var _renderer: GLSurfaceView.Renderer = emptyRenderer()
@@ -66,8 +73,8 @@ class GLViewWrapper @JvmOverloads constructor(
 
     private fun createTextureViewDelegate(context: Context): GLViewWrapperDelegate {
         return object : GLViewWrapperDelegate {
-
             private val glTextureView = GLTextureView(context, null).also { glTextureView ->
+                glTextureView.setEGLContextClientVersion(2)
                 glTextureView.setRenderer(rendererForwarder)
                 addView(glTextureView)
             }
@@ -84,8 +91,8 @@ class GLViewWrapper @JvmOverloads constructor(
 
     private fun createSurfaceViewDelegate(context: Context): GLViewWrapperDelegate {
         return object : GLViewWrapperDelegate {
-
             private val glSurfaceView = GLSurfaceView(context, null).also { glSurfaceView ->
+                glSurfaceView.setEGLContextClientVersion(2)
                 glSurfaceView.setRenderer(rendererForwarder)
                 addView(glSurfaceView)
             }

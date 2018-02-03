@@ -9,5 +9,5 @@ class AirHockeyAttributeContainer(
 ) : AttributeContainer(glWrapper) {
 
     @get:GLThread
-    val aPosition by attribute("a_position")
+    val aPosition by attribute("a_Position")
 }

@@ -1,5 +1,6 @@
 package com.aidanvii.utils.opengles
 
+import android.support.annotation.FloatRange
 import android.support.annotation.IntRange
 
 class VertexBuilder2D(initialSize: Int) {
@@ -8,13 +9,13 @@ class VertexBuilder2D(initialSize: Int) {
     private var position = 0
 
     fun point(
-            pointX: Int,
-            pointY: Int
+            @IntRange(from = -1, to = 1) pointX: Int,
+            @IntRange(from = -1, to = 1) pointY: Int
     ) = point(pointX.toFloat(), pointY.toFloat())
 
     fun point(
-            pointX: Float,
-            pointY: Float
+            @FloatRange(from = -1.0, to = 1.0) pointX: Float,
+            @FloatRange(from = -1.0, to = 1.0) pointY: Float
     ) {
         if (vertexData.size < position + 2) {
             vertexData += 2
@@ -24,17 +25,17 @@ class VertexBuilder2D(initialSize: Int) {
     }
 
     fun line(
-            point1X: Int,
-            point1Y: Int,
-            point2X: Int,
-            point2Y: Int
+            @IntRange(from = -1, to = 1) point1X: Int,
+            @IntRange(from = -1, to = 1) point1Y: Int,
+            @IntRange(from = -1, to = 1) point2X: Int,
+            @IntRange(from = -1, to = 1) point2Y: Int
     ) = line(point1X.toFloat(), point1Y.toFloat(), point2X.toFloat(), point2Y.toFloat())
 
     fun line(
-            point1X: Float,
-            point1Y: Float,
-            point2X: Float,
-            point2Y: Float
+            @FloatRange(from = -1.0, to = 1.0) point1X: Float,
+            @FloatRange(from = -1.0, to = 1.0) point1Y: Float,
+            @FloatRange(from = -1.0, to = 1.0) point2X: Float,
+            @FloatRange(from = -1.0, to = 1.0) point2Y: Float
     ) {
         if (vertexData.size < position + 4) {
             vertexData += 4
@@ -46,21 +47,21 @@ class VertexBuilder2D(initialSize: Int) {
     }
 
     fun triangle(
-            point1X: Int,
-            point1Y: Int,
-            point2X: Int,
-            point2Y: Int,
-            point3X: Int,
-            point3Y: Int
+            @IntRange(from = -1, to = 1) point1X: Int,
+            @IntRange(from = -1, to = 1) point1Y: Int,
+            @IntRange(from = -1, to = 1) point2X: Int,
+            @IntRange(from = -1, to = 1) point2Y: Int,
+            @IntRange(from = -1, to = 1) point3X: Int,
+            @IntRange(from = -1, to = 1) point3Y: Int
     ) = triangle(point1X.toFloat(), point1Y.toFloat(), point2X.toFloat(), point2Y.toFloat(), point3X.toFloat(), point3Y.toFloat())
 
     fun triangle(
-            point1X: Float,
-            point1Y: Float,
-            point2X: Float,
-            point2Y: Float,
-            point3X: Float,
-            point3Y: Float
+            @FloatRange(from = -1.0, to = 1.0) point1X: Float,
+            @FloatRange(from = -1.0, to = 1.0) point1Y: Float,
+            @FloatRange(from = -1.0, to = 1.0) point2X: Float,
+            @FloatRange(from = -1.0, to = 1.0) point2Y: Float,
+            @FloatRange(from = -1.0, to = 1.0) point3X: Float,
+            @FloatRange(from = -1.0, to = 1.0) point3Y: Float
     ) {
         if (vertexData.size < position + 6) {
             vertexData += 6

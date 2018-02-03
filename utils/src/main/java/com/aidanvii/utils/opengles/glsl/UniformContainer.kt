@@ -6,6 +6,10 @@ import com.aidanvii.utils.opengles.GLThread
 abstract class UniformContainer(val glWrapper: GLWrapper) {
     internal var programObjectId = 0
     protected fun uniform(uniformName: String): Lazy<Int> = lazy(LazyThreadSafetyMode.NONE) {
-        glWrapper.glGetUniformLocation(programObjectId, uniformName)
+        glWrapper.glGetUniformLocation(programObjectId, uniformName).also { uniformLocation ->
+            if (uniformLocation == -1) {
+                throw GetUniformLocationError(uniformName)
+            }
+        }
     }
 }

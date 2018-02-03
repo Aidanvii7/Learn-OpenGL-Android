@@ -45,9 +45,9 @@ abstract class GLRenderer(
                 mockGlWrapper: GLWrapper,
                 provideTested: Provider<T>
         ): T {
-            this.provideGlWrapper = { mockGlWrapper }
+            provideGlWrapper = { mockGlWrapper }
             return provideTested().also {
-                this.provideGlWrapper = DEFAULT_PROVIDE_GL_WRAPPER
+                provideGlWrapper = DEFAULT_PROVIDE_GL_WRAPPER
             }
         }
     }

@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="com.aidanvii.utils.opengles.v20.OpenGLES2ViewModel" />
+            type="com.aidanvii.utils.opengles.v20.GLRendererViewModel" />
     </data>
 
     <com.aidanvii.utils.opengles.GLViewWrapper
