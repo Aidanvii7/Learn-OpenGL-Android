@@ -11,6 +11,7 @@ import com.aidanvii.utils.arch.ViewModelFactory
 import com.aidanvii.utils.arch.addTypedFactory
 import com.aidanvii.utils.arch.get
 import com.aidanvii.utils.arch.viewModelProvider
+import com.aidanvii.utils.opengles.glsl.ShaderLoaderProvider
 import com.aidanvii.utils.opengles.v20.OpenGLES2ViewModel
 import com.aidanvii.utils.viewhook.ViewHookInflaterFactory
 
@@ -22,8 +23,9 @@ class AirHockeyActivity : AppCompatActivity() {
     private val viewModelProvider by lazy(LazyThreadSafetyMode.NONE) {
         viewModelProvider(
                 factory = ViewModelFactory.Builder()
-                        .addTypedFactory(OpenGLES2ViewModel.Factory(AirHockeyRenderer()))
-                        .build()
+                        .addTypedFactory(
+                                OpenGLES2ViewModel.Factory(AirHockeyRenderer(ShaderLoaderProvider(this)))
+                        ).build()
         )
     }
 

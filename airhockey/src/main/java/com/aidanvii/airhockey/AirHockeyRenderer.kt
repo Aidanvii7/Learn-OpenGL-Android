@@ -1,29 +1,40 @@
 package com.aidanvii.airhockey
 
+import android.opengl.GLES20.GL_FLOAT
+import android.opengl.GLES20.GL_LINES
+import android.opengl.GLES20.GL_POINTS
+import android.opengl.GLES20.GL_TRIANGLES
 import com.aidanvii.utils.opengles.GLThread
-import com.aidanvii.utils.opengles.v20.OpenGLES2Renderer
+import com.aidanvii.utils.opengles.vertexBuilder2D
+import com.aidanvii.utils.opengles.glsl.ShaderProgram
+import com.aidanvii.utils.opengles.glsl.ShaderLoaderProvider
+import com.aidanvii.utils.opengles.v20.GLRenderer
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import javax.microedition.khronos.egl.EGLConfig
 
-class AirHockeyRenderer : OpenGLES2Renderer() {
+class AirHockeyRenderer(
+        shaderLoaderProvider: ShaderLoaderProvider
+) : GLRenderer(shaderLoaderProvider) {
 
-    val tableVerticesWithTriangles = floatArrayOf(
-            // triangle 1
-            0f, 0f,
-            9f, 14f,
-            0f, 14f,
-            //triangle 2
-            0f, 0f,
-            9f, 0f,
-            9f, 14f,
-            // line
-            0f, 7f,
-            9f, 7f,
-            // mallets
-            4.5f, 2f,
-            4.5f, 12f
-    )
+    val tableVerticesWithTriangles = vertexBuilder2D(20) {
+        triangle(
+                point1X = 0f, point1Y = 0f,
+                point2X = 9f, point2Y = 14f,
+                point3X = 0f, point3Y = 14f
+        )
+        triangle(
+                point1X = 0f, point1Y = 0f,
+                point2X = 9f, point2Y = 0f,
+                point3X = 9f, point3Y = 14f
+        )
+        line(
+                point1X = 0f, point1Y = 7f,
+                point2X = 9f, point2Y = 7f
+        )
+        point(pointX = 4.5f, pointY = 2f)
+        point(pointX = 4.5f, pointY = 12f)
+    }.build()
 
     val vertexData = ByteBuffer
             // allocate block of native memory
@@ -36,9 +47,65 @@ class AirHockeyRenderer : OpenGLES2Renderer() {
         put(tableVerticesWithTriangles)
     }
 
+    @get:GLThread
+    val shaderProgram by lazy {
+        ShaderProgram(
+                glWrapper = this,
+                vertexShader = shaderLoaderProvider(
+                        glWrapper = this,
+                        shaderResourceId = R.raw.simple_vertex_shader
+                ).compileVertexShader(AirHockeyAttributeContainer(this)),
+                fragmentShader = shaderLoaderProvider(
+                        glWrapper = this,
+                        shaderResourceId = R.raw.simple_fragment_shader
+                ).compileFragmentShader(AirHockeyUniformContainer(this))
+        )
+    }
+
     @GLThread
     override fun onSurfaceCreated(config: EGLConfig) {
-        glClearColor(red = 1f, blue = 1f)
+        glClearColor(red = 0f, green = 0f, blue = 0f)
+
+        glUseProgram(shaderProgram.programObjectId)
+        vertexData.position(0)
+        shaderProgram.vertexShader.attributeContainer.apply {
+            shaderProgram.fragmentShader.uniformContainer.apply {
+                glVertexAttribPointer(
+                        attributeIndex = aPosition,
+                        size = 2,
+                        type = GL_FLOAT,
+                        normalized = false,
+                        stride = 0,
+                        ptr = vertexData
+                )
+                glEnableVertexAttribArray(aPosition)
+                drawTable()
+                drawDividingLine()
+                drawMallet1()
+                drawMallet2()
+            }
+        }
+
+    }
+
+    private fun AirHockeyUniformContainer.drawTable() {
+        glUniform4f(uColor, 1.0f, 1.0f, 1.0f, 1.0f)
+        glDrawArrays(GL_TRIANGLES, 0, 6)
+    }
+
+    private fun AirHockeyUniformContainer.drawDividingLine() {
+        glUniform4f(uColor, 1.0f, 0.0f, 0.0f, 1.0f)
+        glDrawArrays(GL_LINES, 6, 2)
+    }
+
+    private fun AirHockeyUniformContainer.drawMallet1() {
+        glUniform4f(uColor, 0.0f, 0.0f, 1.0f, 1.0f)
+        glDrawArrays(GL_POINTS, 8, 1)
+    }
+
+    private fun AirHockeyUniformContainer.drawMallet2() {
+        glUniform4f(uColor, 1.0f, 0.0f, 0.0f, 1.0f)
+        glDrawArrays(GL_POINTS, 9, 1)
     }
 
     @GLThread

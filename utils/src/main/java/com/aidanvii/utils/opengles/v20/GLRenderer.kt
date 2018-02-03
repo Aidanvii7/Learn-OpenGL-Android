@@ -5,10 +5,13 @@ import android.support.annotation.RestrictTo
 import com.aidanvii.utils.Provider
 import com.aidanvii.utils.databinding.ObservableViewModel
 import com.aidanvii.utils.opengles.GLThread
+import com.aidanvii.utils.opengles.glsl.ShaderLoaderProvider
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-abstract class OpenGLES2Renderer : GLSurfaceView.Renderer, OpenGLES20 by Factory.provideOpenGLES20() {
+abstract class GLRenderer(
+        val shaderLoaderProvider: ShaderLoaderProvider
+) : GLSurfaceView.Renderer, GLWrapper by Factory.provideOpenGLES20() {
 
     @GLThread
     abstract fun onSurfaceCreated(config: EGLConfig)
@@ -32,19 +35,19 @@ abstract class OpenGLES2Renderer : GLSurfaceView.Renderer, OpenGLES20 by Factory
             onSurfaceCreated(config)
 
     object Factory {
-        private val DEFAULT_PROVIDE_OPEN_GLES_20: Provider<OpenGLES20> = { object : OpenGLES20 {} }
-        private var provideOpenGlES20 = DEFAULT_PROVIDE_OPEN_GLES_20
+        private val DEFAULT_PROVIDE_GL_WRAPPER: Provider<GLWrapper> = { object : GLWrapper {} }
+        private var provideGlWrapper = DEFAULT_PROVIDE_GL_WRAPPER
 
-        internal fun provideOpenGLES20(): OpenGLES20 = provideOpenGlES20()
+        internal fun provideOpenGLES20(): GLWrapper = provideGlWrapper()
 
         @RestrictTo(RestrictTo.Scope.TESTS)
         fun <T : ObservableViewModel> tested(
-                mockOpenGLES20: OpenGLES20,
+                mockGlWrapper: GLWrapper,
                 provideTested: Provider<T>
         ): T {
-            this.provideOpenGlES20 = { mockOpenGLES20 }
+            this.provideGlWrapper = { mockGlWrapper }
             return provideTested().also {
-                this.provideOpenGlES20 = DEFAULT_PROVIDE_OPEN_GLES_20
+                this.provideGlWrapper = DEFAULT_PROVIDE_GL_WRAPPER
             }
         }
     }

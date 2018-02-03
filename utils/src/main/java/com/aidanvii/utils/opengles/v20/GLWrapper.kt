@@ -4,8 +4,9 @@ import android.opengl.GLES20
 import android.opengl.GLES20.GL_COLOR_BUFFER_BIT
 import android.support.annotation.FloatRange
 import com.aidanvii.utils.opengles.GLThread
+import java.nio.Buffer
 
-interface OpenGLES20 {
+interface GLWrapper {
 
     /**
      * C function void glClearColor ( GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha )
@@ -84,7 +85,7 @@ interface OpenGLES20 {
     ) = GLES20.glGetShaderiv(shaderObjectId, pname, params, offset)
 
     /**
-     * C function void glCompileShader ( GLuint shader )
+     *  C function void glGetShaderInfoLog( GLuint shader, GLsizei maxLength, GLsizei * length, GLchar * infoLog);
      *
      * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glGetShaderInfoLog.xml)
      */
@@ -153,4 +154,90 @@ interface OpenGLES20 {
     @GLThread
     fun glDeleteProgram(programObjectId: Int) = GLES20.glDeleteProgram(programObjectId)
 
+    /**
+     * C function void glValidateProgram ( GLuint program )
+     *
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glValidateProgram.xml)
+     */
+    @GLThread
+    fun glValidateProgram(programObjectId: Int) = GLES20.glValidateProgram(programObjectId)
+
+    /**
+     *  C function void glUseProgram ( GLuint program )
+     *
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glUseProgram.xml)
+     */
+    @GLThread
+    fun glUseProgram(programObjectId: Int) = GLES20.glUseProgram(programObjectId)
+
+    /**
+     *  C function GLint glGetUniformLocation ( GLuint program, const char *name )
+     *
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glGetUniformLocation.xml)
+     */
+    @GLThread
+    fun glGetUniformLocation(
+            programObjectId: Int,
+            uniformName: String
+    ) = GLES20.glGetUniformLocation(programObjectId, uniformName)
+
+    /**
+     *  C function GLint glGetAttribLocation ( GLuint program, const char *name )
+     *
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glGetAttribLocation.xml)
+     */
+    @GLThread
+    fun glGetAttribLocation(
+            programObjectId: Int,
+            attributeName: String
+    ) = GLES20.glGetAttribLocation(programObjectId, attributeName)
+
+    /**
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glVertexAttribPointer.xml)
+     */
+    @GLThread
+    fun glVertexAttribPointer(
+            attributeIndex: Int,
+            size: Int,
+            type: Int,
+            normalized: Boolean,
+            stride: Int,
+            ptr: Buffer
+    ) = GLES20.glVertexAttribPointer(attributeIndex, size, type, normalized, stride, ptr)
+
+    /**
+     * C function void glEnableVertexAttribArray ( GLuint index )
+     *
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glEnableVertexAttribArray.xml)
+     */
+    @GLThread
+    fun glEnableVertexAttribArray(
+            attributeIndex: Int
+    ) = GLES20.glEnableVertexAttribArray(attributeIndex)
+
+    /**
+     * C function void glUniform4f ( GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w )
+     *
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glUniform4f.xml)
+     */
+    @GLThread
+    fun glUniform4f(
+            location: Int,
+            x: Float,
+            y: Float,
+            z: Float,
+            w: Float
+    ) = GLES20.glUniform4f(location, x, y, z, w)
+
+    /**
+     * C function void glDrawArrays ( GLenum mode, GLint first, GLsizei count )
+     *
+     * [see here](https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/glDrawArrays.xml)
+     */
+    @GLThread
+    fun glDrawArrays(
+            mode: Int,
+            first: Int,
+            count: Int
+    ) = GLES20.glDrawArrays(mode, first, count)
 }

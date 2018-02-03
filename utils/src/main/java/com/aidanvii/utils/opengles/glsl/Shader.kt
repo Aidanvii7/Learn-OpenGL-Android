@@ -4,12 +4,12 @@ import android.opengl.GLES20
 import com.aidanvii.utils.logger.logV
 import com.aidanvii.utils.logger.logW
 import com.aidanvii.utils.opengles.GLThread
-import com.aidanvii.utils.opengles.v20.OpenGLES20
+import com.aidanvii.utils.opengles.v20.GLWrapper
 
 import java.io.Closeable
 
 sealed class Shader @GLThread constructor(
-        private val openGLES20: OpenGLES20,
+        private val glWrapper: GLWrapper,
         shaderSource: String,
         shaderType: Int
 ) : Closeable {
@@ -20,11 +20,11 @@ sealed class Shader @GLThread constructor(
 
     @GLThread
     final override fun close() {
-        openGLES20.glDeleteShader(shaderObjectId)
+        glWrapper.glDeleteShader(shaderObjectId)
     }
 
     private fun loadShader(shaderType: Int, shaderSource: String): Int =
-            openGLES20.run {
+            glWrapper.run {
                 glCreateShader(shaderType).let { shaderObjectId ->
                     if (shaderObjectId == GL_ERROR_CODE) {
                         logW("Could not create $shaderTypeName")
@@ -47,18 +47,21 @@ sealed class Shader @GLThread constructor(
             }
 }
 
-class VertexShader @GLThread internal constructor(
-        openGLES20: OpenGLES20,
-        shaderSource: String
-) : Shader(openGLES20, shaderSource, GLES20.GL_VERTEX_SHADER) {
+class VertexShader<out T : AttributeContainer> @GLThread internal constructor(
+        glWrapper: GLWrapper,
+        shaderSource: String,
+        val attributeContainer: T
+
+) : Shader(glWrapper, shaderSource, GLES20.GL_VERTEX_SHADER) {
     override val shaderTypeName: String
         get() = "vertex shader"
 }
 
-class FragmentShader @GLThread internal constructor(
-        openGLES20: OpenGLES20,
-        shaderSource: String
-) : Shader(openGLES20, shaderSource, GLES20.GL_FRAGMENT_SHADER) {
+class FragmentShader<out T : UniformContainer> @GLThread internal constructor(
+        glWrapper: GLWrapper,
+        shaderSource: String,
+        val uniformContainer: T
+) : Shader(glWrapper, shaderSource, GLES20.GL_FRAGMENT_SHADER) {
     override val shaderTypeName: String
         get() = "fragment shader"
 }

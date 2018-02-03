@@ -36,6 +36,7 @@ class GLViewWrapper @JvmOverloads constructor(
         }
 
     init {
+        // FIXME: doesn't work for SupportFragment lifecycle, consider moving to BindingAdapter
         (context as? FragmentActivity)?.apply {
             lifecycle.addObserver(object : DefaultLifecycleObserver {
                 override fun onStart(owner: LifecycleOwner) = onStart()

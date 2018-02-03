@@ -1,4 +1,4 @@
-# TODO document from book!
+// TODO document from book!
 
 precision mediump float;
 

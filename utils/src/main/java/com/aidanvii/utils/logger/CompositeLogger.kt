@@ -4,7 +4,9 @@ object CompositeLogger : CompositeLoggerDelegate {
 
     private var tagPrefix = ""
 
-    private val delegates: MutableList<LoggerDelegate> = mutableListOf()
+    private val delegates = mutableSetOf<LoggerDelegate>()
+
+    val hasLoggers get() = delegates.size > 0
 
     @Synchronized
     override fun attachDelegate(delegate: LoggerDelegate) {
@@ -21,4 +23,8 @@ object CompositeLogger : CompositeLoggerDelegate {
     }
 
     override fun d(tag: String, message: String) = delegates.forEach { it.d(tagPrefix + tag, message) }
+
+    override fun w(tag: String, message: String) = delegates.forEach { it.w(tagPrefix + tag, message) }
+
+    override fun v(tag: String, message: String) = delegates.forEach { it.v(tagPrefix + tag, message) }
 }

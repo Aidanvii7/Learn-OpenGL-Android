@@ -13,8 +13,7 @@ fun Context.rawResourceAsString(@RawRes resourceId: Int): String {
             resources.openRawResource(resourceId).use { inputStream ->
                 val inputStreamReader = InputStreamReader(inputStream)
                 val bufferedReader = BufferedReader(inputStreamReader)
-                bufferedReader.readLines()
-                for (line in bufferedReader.lineSequence()) {
+                bufferedReader.readLines().forEach { line ->
                     append(line)
                     append('\n')
                 }

@@ -1,13 +1,13 @@
 package com.aidanvii.utils.opengles.glsl
 
 import android.content.Context
-import android.support.annotation.RawRes
-import com.aidanvii.utils.opengles.v20.OpenGLES20
+import com.aidanvii.utils.opengles.v20.GLWrapper
 import com.aidanvii.utils.rawResourceAsString
 import com.aidanvii.utils.opengles.GLThread
+
 class ShaderLoader(
         private val context: Context,
-        private val openGLES20: OpenGLES20,
+        private val glWrapper: GLWrapper,
         private val shaderResourceId: Int
 ) {
 
@@ -15,19 +15,21 @@ class ShaderLoader(
      * Loads and compiles a [VertexShader].
      */
     @GLThread
-    fun compileVertexShader(@RawRes vertexShaderResourceId: Int) =
+    fun <T : AttributeContainer> compileVertexShader(attributeContainer: T) =
             VertexShader(
-                    openGLES20 = openGLES20,
-                    shaderSource = context.rawResourceAsString(shaderResourceId)
+                    glWrapper = glWrapper,
+                    shaderSource = context.rawResourceAsString(shaderResourceId),
+                    attributeContainer = attributeContainer
             )
 
     /**
      * Loads and compiles a [VertexShader]
      */
     @GLThread
-    fun compileFragmentShader(@RawRes fragmentShaderResourceId: Int) =
+    fun <T : UniformContainer> compileFragmentShader(uniformContainer: T) =
             FragmentShader(
-                    openGLES20 = openGLES20,
-                    shaderSource = context.rawResourceAsString(shaderResourceId)
+                    glWrapper = glWrapper,
+                    shaderSource = context.rawResourceAsString(shaderResourceId),
+                    uniformContainer = uniformContainer
             )
 }
